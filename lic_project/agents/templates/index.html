@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+
+<a href="/add/" class="btn btn-primary mb-3">+ Add Agent</a>
+
+<form method="GET" class="mb-3 d-flex">
+    <input type="text" name="q" value="{{ request.GET.q|default:'' }}" class="form-control me-2"
+        placeholder="Search by name or phone">
+    <button type="submit" class="btn btn-dark me-2">Search</button>
+    <a href="/" class="btn btn-secondary">Reset</a>
+</form>
+
+<table class="table table-bordered table-hover shadow">
+    <thead class="table-dark">
+        <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Policy Number</th>
+            <th>Total Amount</th>
+            <th>Start Date</th>
+            <th>Policy Years</th>
+            <th>Plan Duration</th>
+            <th>Next Due Date</th>
+            <th>Maturity Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for agent in agents %}
+        {% with policy=agent.policyholder_set.first %}
+        <tr>
+            <td>{{ agent.name }}</td>
+            <td>{{ agent.phone }}</td>
+            <td>{{ policy.email }}</td>
+            {% if policy %}
+            <td>{{ policy.policy_number }}</td>
+            <td>{{ policy.total_amount }}</td>
+            <td>{{ policy.start_date }}</td>
+            <td>{{ policy.policy_years }} Years</td>
+            <td>{{ policy.get_payment_interval_display }}</td>
+            <td>{{ policy.next_due_date }}</td>
+            <td>{{ policy.maturity_date }}</td>
+            {% else %}
+            <td colspan="7" class="text-center text-muted">No Policy</td>
+            {% endif %}
+            <td>
+                <a href="/update/{{ agent.id }}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="/delete/{{ agent.id }}" class="btn btn-danger btn-sm"
+                    onclick="return confirm('Are you sure?')">Delete</a>
+            </td>
+        </tr>
+        {% endwith %}
+        {% empty %}
+        <tr>
+            <td colspan="11" class="text-center">No agents found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
