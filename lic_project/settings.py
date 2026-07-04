@@ -127,3 +127,5 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+CSRF_TRUSTED_ORIGINS = ['https://lic-policy-management-production.up.railway.app']
